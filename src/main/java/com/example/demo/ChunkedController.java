@@ -1,4 +1,4 @@
-package com.jm.learn.test;
+package com.example.demo;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 @RequestMapping("/api")
 public class ChunkedController {
 
-    @GetMapping(value = "/chunked-json", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/chunked", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseBodyEmitter getChunkedJsonResponse() {
         ResponseBodyEmitter emitter = new ResponseBodyEmitter();
 
@@ -48,7 +48,6 @@ public class ChunkedController {
                     emitter.send(chunk);
                     Thread.sleep(50); // Simulate streaming delay
                 }
-
                 emitter.complete();
             } catch (Exception e) {
                 emitter.completeWithError(e);
