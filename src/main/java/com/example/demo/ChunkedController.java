@@ -9,8 +9,8 @@ import java.io.IOException;
 @RequestMapping("/api")
 public class ChunkedController {
 
-    @PostMapping("/chunked")
-    public ResponseBodyEmitter sendChunkedResponse(@RequestBody String request) {
+    @PostMapping("/chunked/{delay}")
+    public ResponseBodyEmitter sendChunkedResponse(@PathVariable("delay") Integer delay, @RequestBody String request) {
         ResponseBodyEmitter emitter = new ResponseBodyEmitter();
 
         // Start a new thread to handle the chunked response
@@ -75,10 +75,14 @@ public class ChunkedController {
                     "}";
 
                 // Emitting chunks in parts
+                if(delay !=null)
+                    Thread.sleep(delay);
                 emitter.send(jsonStart); // Start of the JSON
-                Thread.sleep(100);
+                if(delay !=null)
+                Thread.sleep(delay);
                 emitter.send(jsonMiddle); // Middle part of the JSON
-                Thread.sleep(100);
+                if(delay !=null)
+                Thread.sleep(delay);
                 emitter.send(jsonEnd); // End of the JSON
 
                 emitter.complete(); // End the response
