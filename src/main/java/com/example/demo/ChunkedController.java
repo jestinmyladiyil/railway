@@ -12,8 +12,8 @@ import java.util.UUID;
 @RequestMapping("/api")
 public class ChunkedController {
 
-    @PostMapping("/chunked/{delay}")
-    public ResponseEntity<ResponseBodyEmitter> sendChunkedResponse(@RequestBody String request, @PathVariable("delay") Integer delay) {
+    @PostMapping("/chunked/{delay}/{complete}")
+    public ResponseEntity<ResponseBodyEmitter> sendChunkedResponse(@RequestBody String request, @PathVariable("delay") Integer delay, @PathVariable("complete") Integer complete) {
         ResponseBodyEmitter emitter = new ResponseBodyEmitter();
 
         new Thread(() -> {
@@ -94,6 +94,7 @@ public class ChunkedController {
                 emitter.send(jsonEnd);
 
                 // Mark response as complete
+                if(complete != null) Thread.sleep(complete);
                 emitter.complete();
 
             } catch (IOException e) {
