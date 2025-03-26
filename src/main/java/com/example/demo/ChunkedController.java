@@ -69,22 +69,19 @@ public class ChunkedController {
           Thread.sleep(delay);
         emitter.send(jsonEnd);
 
+        if (complete != null)
+          Thread.sleep(complete);
+
         // Mark response as complete
         if (request.contains("exception-before")) {
           throw new RuntimeException("Manually triggering exception before emitter complete");
         } else if (request.contains("exception-complete")) {
-          if (complete != null)
-            Thread.sleep(complete);
           emitter.completeWithError(new RuntimeException("Manually triggering exception with complete"));
-        } else if (request.contains("exception-after")) {
-          if (complete != null)
-            Thread.sleep(complete);
-          emitter.complete();
-          throw new RuntimeException("Mannually triggering exception after completing emitter");
         } else {
-          if (complete != null)
-            Thread.sleep(complete);
           emitter.complete();
+        }
+        if (request.contains("exception-after")) {
+          throw new RuntimeException("Mannually triggering exception after completing emitter");
         }
 
       } catch (IOException e) {
